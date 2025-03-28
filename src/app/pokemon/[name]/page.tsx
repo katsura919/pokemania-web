@@ -316,9 +316,7 @@ export default function PokemonPage() {
                       />
                     </div>
                     <span className="mt-2 font-medium capitalize">{evo}</span>
-                    {index < pokemon.evolution.length - 1 && (
-                      <Icons.chevronRight className="h-6 w-6 text-gray-400" />
-                    )}
+               
                   </div>
                 ))}
               </div>

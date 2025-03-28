@@ -1,18 +1,38 @@
-// This file centralizes all your icon imports for easy management
-
+// components/icons.tsx
 import { 
-    ChevronRight,
-    // Add other icons you need from lucide-react
-    // Example:
-    // Heart,
-    // Shield,
-    // Sword,
-  } from "lucide-react"
-  
-  export const Icons = {
-    chevronRight: ChevronRight,
-    // Add other icons here:
-    // heart: Heart,
-    // shield: Shield,
-    // sword: Sword,
-  }
+  ChevronRight,
+  Sword,
+  Shield,
+  Trophy,
+  Share2,
+  History,
+  Swords,
+  Sparkles,
+  Zap,
+  Heart,
+  Skull,
+  BarChart2,
+  Clock,
+
+  // Add any other icons you need
+} from "lucide-react";
+
+export const Icons = {
+  chevronRight: ChevronRight,
+  sword: Sword,
+  shield: Shield,
+  trophy: Trophy,
+  share: Share2,
+  history: History,
+  swords: Swords,
+  sparkles: Sparkles,
+  zap: Zap,
+  heart: Heart,
+  skull: Skull,
+  stats: BarChart2,
+  clock: Clock,
+  // Add more icons as needed
+};
+
+// Type for better autocompletion
+export type IconName = keyof typeof Icons;
