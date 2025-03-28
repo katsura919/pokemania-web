@@ -1,19 +1,51 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { PokemonGrid } from "@/components/pokemonlist/pokemon-grid";
 import { Pagination } from "@/components/pokemonlist/pagination";
 import { fetchPokemonList } from "@/lib/pokeapi";
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Pokémon Encyclopedia",
-  description: "Browse through all Pokémon",
-};
+// Client component doesn't support export metadata directly
+// You'll need to handle this in your layout or parent component
 
-// Simplified props type that works with Next.js 13+
+export default function PokemonPage() {
+  const [page, setPage] = useState(1);
+  const [pokemonList, setPokemonList] = useState<any[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        const { pokemonList: data, totalPages: pages } = await fetchPokemonList(page);
+        setPokemonList(data);
+        setTotalPages(pages);
+      } catch (error) {
+        console.error("Failed to load Pokémon:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-export default async function PokemonPage({ searchParams = { page: '1' } }) {
-  const page = Number(searchParams.page) || 1;
-  const { pokemonList, totalPages } = await fetchPokemonList(page);
+    loadData();
+  }, [page]);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  if (isLoading) {
+    return (
+      <main className="container mx-auto px-4 py-8">
+        <div className="text-center py-12">
+          <p>Loading Pokémon...</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="container mx-auto px-4 py-8">
@@ -27,7 +59,11 @@ export default async function PokemonPage({ searchParams = { page: '1' } }) {
       </div>
       
       <PokemonGrid pokemonList={pokemonList} />
-      <Pagination page={page} totalPages={totalPages} />
+      <Pagination 
+        page={page} 
+        totalPages={totalPages} 
+        onPageChange={handlePageChange} 
+      />
     </main>
   );
 }
