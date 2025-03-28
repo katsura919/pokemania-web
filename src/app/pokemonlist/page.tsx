@@ -8,13 +8,14 @@ export const metadata: Metadata = {
   description: "Browse through all Pokémon",
 };
 
-// Proper type definition that satisfies Next.js requirements
-interface PokemonPageProps {
-  params: Record<string, never>;
-  searchParams: { page?: string };
+// Simplified props type that works with Next.js 13+
+interface PageProps {
+  searchParams?: {
+    page?: string;
+  };
 }
 
-export default async function PokemonPage({ searchParams }: PokemonPageProps): Promise<any> {
+export default async function PokemonPage({ searchParams = { page: '1' } }: PageProps) {
   const page = Number(searchParams.page) || 1;
   const { pokemonList, totalPages } = await fetchPokemonList(page);
 
