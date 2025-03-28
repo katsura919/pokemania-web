@@ -3,20 +3,18 @@ import { Pagination } from "@/components/pokemonlist/pagination";
 import { fetchPokemonList } from "@/lib/pokeapi";
 import { Metadata } from "next";
 
-// Add proper type for searchParams
-interface SearchParams {
-  page?: string;
-}
-
-// Add proper props type
-interface PageProps {
-  searchParams: SearchParams;
-}
-
 export const metadata: Metadata = {
   title: "Pokémon Encyclopedia",
   description: "Browse through all Pokémon",
 };
+
+// Add this type to avoid searchParams issues
+interface PageProps {
+  params: {};
+  searchParams: {
+    page?: string;
+  };
+}
 
 export default async function PokemonPage({ searchParams }: PageProps) {
   const page = Number(searchParams.page) || 1;
