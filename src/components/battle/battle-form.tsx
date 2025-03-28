@@ -1,4 +1,4 @@
-"use client";
+
 import { useState } from "react";
 import axios from "axios";
 import pokemonData from "@/data/pokemon.json";
