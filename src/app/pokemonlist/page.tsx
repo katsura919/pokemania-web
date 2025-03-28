@@ -9,13 +9,9 @@ export const metadata: Metadata = {
 };
 
 // Simplified props type that works with Next.js 13+
-interface PageProps {
-  searchParams?: {
-    page?: string;
-  };
-}
 
-export default async function PokemonPage({ searchParams = { page: '1' } }: PageProps) {
+
+export default async function PokemonPage({ searchParams = { page: '1' } }) {
   const page = Number(searchParams.page) || 1;
   const { pokemonList, totalPages } = await fetchPokemonList(page);
 
