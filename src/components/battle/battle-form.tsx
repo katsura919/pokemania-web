@@ -1,3 +1,5 @@
+"use client"; // Add this at the very top
+
 import { useState } from "react";
 import axios from "axios";
 import pokemonData from "@/data/pokemon.json";
@@ -16,12 +18,19 @@ import {
 } from "@/components/ui/popover";
 import { Check, ChevronsUpDown, Swords } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { LottieSpinner } from "@/components/spinner";
+import dynamic from "next/dynamic";
+
+// Dynamically import LottieSpinner to avoid SSR issues
+const LottieSpinner = dynamic(
+  () => import("@/components/spinner").then((mod) => mod.LottieSpinner),
+  { ssr: false }
+);
 
 interface BattleFormProps {
   setBattleData: (data: { winner_id: number | null; winner_name: string | null }) => void;
 }
 
+// Rest of your interfaces remain the same
 interface PokemonOption {
   value: string;
   label: string;
@@ -39,6 +48,7 @@ const pokemonOptions: PokemonOption[] = Object.keys(pokemonMap).map(name => ({
 }));
 
 export default function BattleForm({ setBattleData }: BattleFormProps) {
+  // Your existing state and logic remains the same
   const [firstPokemon, setFirstPokemon] = useState("");
   const [secondPokemon, setSecondPokemon] = useState("");
   const [loading, setLoading] = useState(false);
@@ -47,6 +57,7 @@ export default function BattleForm({ setBattleData }: BattleFormProps) {
   const [openSecond, setOpenSecond] = useState(false);
 
   const handleBattle = async () => {
+    // Your existing battle logic remains the same
     setError("");
     setBattleData({ winner_id: null, winner_name: null });
 
@@ -81,7 +92,7 @@ export default function BattleForm({ setBattleData }: BattleFormProps) {
       );
       setBattleData({
         winner_id: response.data.winner_id,
-        winner_name: response.data.winner_name.toLowerCase() // Ensure consistent casing
+        winner_name: response.data.winner_name.toLowerCase()
       });
     } catch (err) {
       console.error("Battle Prediction Error:", err);
