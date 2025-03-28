@@ -1,12 +1,22 @@
 import { PokemonGrid } from "@/components/pokemonlist/pokemon-grid";
 import { Pagination } from "@/components/pokemonlist/pagination";
 import { fetchPokemonList } from "@/lib/pokeapi";
+import { Metadata } from "next";
 
-export default async function PokemonPage({
-  searchParams,
-}: {
-  searchParams: { page?: string };
-}) {
+// Add this type definition
+interface PokemonPageProps {
+  searchParams: {
+    page?: string;
+  };
+}
+
+// Optional: Add metadata for SEO
+export const metadata: Metadata = {
+  title: "Pokémon Encyclopedia",
+  description: "Browse through all Pokémon",
+};
+
+export default async function PokemonPage({ searchParams }: PokemonPageProps) {
   const page = Number(searchParams.page) || 1;
   const { pokemonList, totalPages } = await fetchPokemonList(page);
 
