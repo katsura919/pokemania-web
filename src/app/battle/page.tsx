@@ -1,7 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BattleForm from "@/components/battle/battle-form";
-import { Icons } from "@/components/icons"; // Make sure you have these icons
+import { Icons } from "@/components/icons";
+
+// Add this to prevent prerendering
+export const dynamic = 'force-dynamic';
 
 export default function BattlePage() {
   const [battleResult, setBattleResult] = useState<{
@@ -9,8 +12,29 @@ export default function BattlePage() {
     winner_name: string | null;
   }>({ winner_id: null, winner_name: null });
 
+  // State for client-side mounting
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 text-gray-900">
+      {/* Conditional rendering of browser-dependent elements */}
+      {isClient && (
+        <>
+          {/* Animated Background Elements */}
+          <div className="absolute inset-0 overflow-hidden opacity-10">
+            <div className="absolute top-20 left-10 w-32 h-32 bg-red-400 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
+            <div className="absolute top-40 right-20 w-32 h-32 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+            <div className="absolute bottom-20 left-1/2 w-32 h-32 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
+          </div>
+        </>
+      )}
+
+      {/* Rest of your component remains the same */}
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50 text-gray-900">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden opacity-10">
         <div className="absolute top-20 left-10 w-32 h-32 bg-red-400 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
@@ -92,6 +116,7 @@ export default function BattlePage() {
 
       </div>
       
+    </div>
     </div>
   );
 }
