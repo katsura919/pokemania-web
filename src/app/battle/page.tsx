@@ -51,7 +51,7 @@ export default function BattlePage() {
             <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 hover:shadow-2xl transition-shadow duration-300">
               <div className="p-1 bg-gradient-to-r from-red-500 to-blue-600"></div>
               <div className="p-6 sm:p-8">
-                <BattleForm setBattleData={setBattleResult} />
+              
               </div>
             </div>
           </div>
