@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import axios from "axios";
 import pokemonData from "@/data/pokemon.json";
@@ -15,7 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, Swords } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LottieSpinner } from "@/components/spinner";
 
@@ -56,6 +55,11 @@ export default function BattleForm({ setBattleData }: BattleFormProps) {
       return;
     }
 
+    if (firstPokemon === secondPokemon) {
+      setError("Please select two different Pokémon");
+      return;
+    }
+
     const firstId = pokemonMap[firstPokemon];
     const secondId = pokemonMap[secondPokemon];
 
@@ -77,26 +81,32 @@ export default function BattleForm({ setBattleData }: BattleFormProps) {
       );
       setBattleData({
         winner_id: response.data.winner_id,
-        winner_name: response.data.winner_name
+        winner_name: response.data.winner_name.toLowerCase() // Ensure consistent casing
       });
     } catch (err) {
       console.error("Battle Prediction Error:", err);
-      setError("Failed to get battle prediction. Try again later.");
+      setError("Failed to get battle prediction. Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg border border-gray-200 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
-        ⚔️ Pokémon Battle Predictor
-      </h2>
+    <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-gray-800 flex items-center justify-center gap-2">
+          <Swords className="h-6 w-6 text-red-500" />
+          Pokémon Battle Predictor
+        </h2>
+        <p className="text-sm text-gray-500 mt-1">
+          Select two Pokémon to predict the winner
+        </p>
+      </div>
 
       <div className="space-y-4">
         {/* First Pokémon Select */}
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-gray-700">First Pokémon</label>
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">First Pokémon</label>
           <Popover open={openFirst} onOpenChange={setOpenFirst}>
             <PopoverTrigger asChild>
               <Button
@@ -111,7 +121,7 @@ export default function BattleForm({ setBattleData }: BattleFormProps) {
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[300px] p-0">
+            <PopoverContent className="w-full p-0" align="start">
               <Command>
                 <CommandInput placeholder="Search Pokémon..." />
                 <CommandEmpty>No Pokémon found.</CommandEmpty>
@@ -140,9 +150,16 @@ export default function BattleForm({ setBattleData }: BattleFormProps) {
           </Popover>
         </div>
 
+        {/* VS Separator */}
+        <div className="flex items-center justify-center my-2">
+          <div className="h-px bg-gray-200 flex-1"></div>
+          <span className="px-4 text-sm font-medium text-gray-500">VS</span>
+          <div className="h-px bg-gray-200 flex-1"></div>
+        </div>
+
         {/* Second Pokémon Select */}
-        <div className="space-y-1">
-          <label className="text-sm font-medium text-gray-700">Second Pokémon</label>
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">Second Pokémon</label>
           <Popover open={openSecond} onOpenChange={setOpenSecond}>
             <PopoverTrigger asChild>
               <Button
@@ -157,7 +174,7 @@ export default function BattleForm({ setBattleData }: BattleFormProps) {
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[300px] p-0">
+            <PopoverContent className="w-full p-0" align="start">
               <Command>
                 <CommandInput placeholder="Search Pokémon..." />
                 <CommandEmpty>No Pokémon found.</CommandEmpty>
@@ -189,8 +206,8 @@ export default function BattleForm({ setBattleData }: BattleFormProps) {
         {/* Battle Button */}
         <Button
           onClick={handleBattle}
-          disabled={loading || !firstPokemon || !secondPokemon}
-          className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md transition-colors"
+          disabled={loading || !firstPokemon || !secondPokemon || firstPokemon === secondPokemon}
+          className="w-full bg-gradient-to-r from-red-500 to-blue-600 hover:from-red-600 hover:to-blue-700 text-white shadow-lg transition-all"
           size="lg"
         >
           {loading ? (
@@ -199,13 +216,16 @@ export default function BattleForm({ setBattleData }: BattleFormProps) {
               Predicting...
             </span>
           ) : (
-            "Battle!"
+            <span className="flex items-center gap-2">
+              <Swords className="h-4 w-4" />
+              Battle!
+            </span>
           )}
         </Button>
 
         {/* Error Message */}
         {error && (
-          <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
+          <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-md text-sm">
             {error}
           </div>
         )}
